@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var InitialSetup = require('./components/InitialSetup.jsx');
 
 
-//ReactDOM.render(<List />, document.getElementById('ingredients'));
+ReactDOM.render(<InitialSetup />, document.getElementById('main'));

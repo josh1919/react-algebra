@@ -22185,13 +22185,108 @@ module.exports = require('./lib/React');
 },{"./lib/React":162}],185:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
-var algebra = require('algebra.js');
+var ProblemRows = require('./ProblemRows.jsx');
+
+class EnterProblem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentInput: '',
+      currentProblem: null
+    };
+  }
+  onChange(e) {
+    this.setState({
+      currentInput: e.target.value
+    });
+  }
+  onSubmit(e) {
+    e.preventDefault();
+    //let {} = this.state
+
+    //removes all white space in inputed problem
+    var preArray = this.state.currentInput.replace(/ /g, '');
+    //TODO check to see there is only one kind of variable
+    //will split string at any found operator or equal sign but leave the delimiter
+    var numArray = preArray.split(/([-\+\*\/=])/g);
+    this.setState({ currentProblem: numArray });
+
+    ReactDOM.render(React.createElement(ProblemRows, { myProblem: this.state.currentInput }), document.getElementById('problem-row'));
+    //Does this go after so this render function is not getting something empty?
+    this.setState({
+      currentInput: ''
+    });
+  }
+  render() {
+    return React.createElement(
+      'div',
+      { className: 'row panel-body col-sm-12' },
+      React.createElement(
+        'form',
+        { onSubmit: this.onSubmit.bind(this), className: 'col-sm-10' },
+        React.createElement(
+          'div',
+          { className: 'row' },
+          React.createElement('input', { type: 'text',
+            onChange: this.onChange.bind(this),
+            value: this.state.currentInput
+          }),
+          React.createElement(
+            'button',
+            { className: 'btn btn-primary' },
+            'Submit'
+          )
+        )
+      )
+    );
+  }
+}
+
+module.exports = EnterProblem;
+
+},{"./ProblemRows.jsx":189,"react":184,"react-dom":33}],186:[function(require,module,exports){
+var React = require('react');
+var EnterProblem = require('./EnterProblem.jsx');
+
+class First extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    let divStyle = {
+      margin: 10
+    };
+    return React.createElement(
+      'div',
+      { style: divStyle, className: 'panel panel-primary col-sm-6' },
+      React.createElement(
+        'div',
+        { style: divStyle, className: 'panel-heading' },
+        React.createElement(
+          'h3',
+          null,
+          'Algebra Problem Solver'
+        )
+      ),
+      React.createElement(EnterProblem, null)
+    );
+  }
+}
+
+module.exports = First;
+
+},{"./EnterProblem.jsx":185,"react":184}],187:[function(require,module,exports){
+var React = require('react');
+var ReactDOM = require('react-dom'); //TODO Delete this line
+var algebra = require('algebra.js'); //TODO delete this line
+var ProblemRow = require('./ProblemRow.jsx');
 
 var InitialSetup = React.createClass({
   displayName: 'InitialSetup',
 
   getInitialState: function () {
-    return { newElementString: '' };
+    return { exportArray: [], newElementString: '' };
   },
   onChange: function (e) {
     this.setState({ newElementString: e.target.value });
@@ -22199,20 +22294,18 @@ var InitialSetup = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault();
     /* TODO Eventual bug fixes and likely errors:
-     *  should not submit empty field
-     *  only one variable
-     *  for now will expect "x" as variable, should be allowed to use any
+    *  should not submit empty field
+    *  only one variable
+    *  for now will expect "x" as variable, should be allowed to use any
     */
-
-    //TODO The magic of the setup happens here then moves to the next step <Item />
 
     //remove whitespace
     var preArray = this.state.newElementString.replace(/ /g, '');
     //TODO check to see there is only one kind of variable
     //will split string at any found operator or equal sign but leave the delimiter
     var numArray = preArray.split(/([-\+\*\/=])/g);
-    //console.log(operatorArray);
-    console.log(numArray);
+    this.setState({ exportArray: numArray });
+    //  ReactDOM.render(<ProblemRow problem={this.state.exportArray} />, document.getElementById('problem'));
   },
   render: function () {
 
@@ -22222,7 +22315,7 @@ var InitialSetup = React.createClass({
 
     return React.createElement(
       'div',
-      { style: divStyle, className: 'col-xs-12 col-sm-6' },
+      { style: divStyle, className: 'col-xs-12 col-sm-12' },
       React.createElement(
         'div',
         { className: 'panel panel-primary' },
@@ -22256,6 +22349,11 @@ var InitialSetup = React.createClass({
               )
             )
           )
+        ),
+        React.createElement(
+          ProblemRow,
+          null,
+          'ItsMyProblem'
         )
       )
     );
@@ -22265,11 +22363,101 @@ var InitialSetup = React.createClass({
 
 module.exports = InitialSetup;
 
-},{"algebra.js":1,"react":184,"react-dom":33}],186:[function(require,module,exports){
+},{"./ProblemRow.jsx":188,"algebra.js":1,"react":184,"react-dom":33}],188:[function(require,module,exports){
+var React = require('react');
+var ReactDOM = require('react-dom');
+
+var ProblemRow = React.createClass({
+  displayName: 'ProblemRow',
+
+  getInitialState: function () {
+    return { currentProblem: null };
+  },
+  componentWillReceiveProps: function () {
+    this.setState({ currentProblem: this.props.problem });
+    console.log("componentWillReceiveProps: " + this.state.currentProblem);
+  },
+  render: function () {
+
+    //TODO: this works (kindof) return <div>{this.props.problem}</div>
+    return React.createElement(
+      'div',
+      null,
+      this.state.currentProblem
+    );
+
+    //  return ReactDOM.render(<div>Test{this.state.currentProblem}</div>, document.getElementById('problem'));
+  }
+});
+
+module.exports = ProblemRow;
+
+},{"react":184,"react-dom":33}],189:[function(require,module,exports){
+var React = require('react');
+var ReactDOM = require('react-dom');
+//var algebra = require('../../node_modules/algebra.js/algebra.js');
+var algebra = require("algebra.js");
+var Fraction = algebra.Fraction;
+var Expression = algebra.Expression;
+var Equation = algebra.Equation;
+
+class ProblemRows extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentProblem: this.props.myProblem
+    };
+  }
+
+  //TODO: receive the raw current problem from previous component. fix the array here. and prepare for next step //TODO: may not need array afterall
+  render() {
+    var preArray = this.state.currentProblem.replace(/ /g, '');
+    //TODO check to see there is only one kind of variable
+    //will split string at any found operator or equal sign but leave the delimiter
+    var numArray = preArray.split(/([-\+\*\/=])/g);
+    //  this.setState({currentProblem: numArray});
+    //TODO algebra logic goes here
+
+    var x = new Expression("x");
+
+    var x1 = algebra.parse(this.state.currentProblem);
+    var output = 1;
+    //var myData = "my numArray is: " + numArray;
+
+    //In this return goes next step which will make a new step after this one but it should append it to the end of the last one.
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(
+        'h4',
+        null,
+        'Here is your problem\'s current state'
+      ),
+      React.createElement(
+        'div',
+        null,
+        'Problem = ',
+        this.state.currentProblem
+      ),
+      React.createElement(
+        'div',
+        null,
+        'Simplified => ',
+        x1.toString()
+      )
+    );
+  }
+}
+
+module.exports = ProblemRows;
+
+},{"algebra.js":1,"react":184,"react-dom":33}],190:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
 var InitialSetup = require('./components/InitialSetup.jsx');
+var First = require('./components/First.jsx');
 
-ReactDOM.render(React.createElement(InitialSetup, null), document.getElementById('main'));
+//ReactDOM.render(<InitialSetup />, document.getElementById('main'));
+ReactDOM.render(React.createElement(First, null), document.getElementById('first'));
 
-},{"./components/InitialSetup.jsx":185,"react":184,"react-dom":33}]},{},[186]);
+},{"./components/First.jsx":186,"./components/InitialSetup.jsx":187,"react":184,"react-dom":33}]},{},[190]);

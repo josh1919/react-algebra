@@ -43,7 +43,7 @@ class ProblemRows extends React.Component{
 
       return (
 
-        <div className="row">
+        <div>
 
           <div className="col-sm-6">Problem => {this.state.currentProblem}</div>
 

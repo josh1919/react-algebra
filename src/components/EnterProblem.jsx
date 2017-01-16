@@ -1,13 +1,12 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var ProblemRows = require('./ProblemRows.jsx');
+var ProblemContainer = require('./ProblemContainer.jsx');
 
 class EnterProblem extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       currentInput:'',
-      currentProblem:null
     };
   }
   onChange(e){
@@ -17,17 +16,12 @@ class EnterProblem extends React.Component{
   }
   onSubmit(e){
     e.preventDefault();
-    //let {} = this.state
-
     //removes all white space in inputed problem
     var preArray = this.state.currentInput.replace(/ /g, '');
     //TODO check to see there is only one kind of variable
-    //will split string at any found operator or equal sign but leave the delimiter
-    var numArray = preArray.split(/([-\+\*\/=])/g);
-    this.setState({currentProblem: numArray});
 
 
-    ReactDOM.render(<ProblemRows myProblem={this.state.currentInput}/>, document.getElementById('problem-row'));
+    ReactDOM.render(<ProblemContainer myProblem={preArray}/>, document.getElementById('problem-row'));
     //Does this go after so this render function is not getting something empty?
     this.setState({
       currentInput: ''
@@ -40,7 +34,7 @@ class EnterProblem extends React.Component{
         <form onSubmit={this.onSubmit.bind(this)}>
 
           <div className='row'>
-        
+
               <input
                 type='text'
                 onChange={this.onChange.bind(this)}

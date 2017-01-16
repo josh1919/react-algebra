@@ -42,11 +42,12 @@ class ProblemRows extends React.Component{
 
 
       return (
-        <div>
 
-          <div>Problem => {this.state.currentProblem}</div>
+        <div className="row">
 
-          <button onClick={this.handleSimplify}>Combine Like Terms (simplify)</button>
+          <div className="col-sm-6">Problem => {this.state.currentProblem}</div>
+
+          <button className="btn btn-primary col-sm-6" onClick={this.handleSimplify}>Combine Like Terms (simplify)</button>
           {
             this.state.hasSimplified == true ? <ProblemRows myProblem={algebra.parse(this.state.currentProblem).toString()} /> : null
           }

@@ -36,16 +36,22 @@ class EnterProblem extends React.Component{
   render(){
     return (
 
-      <div className="row panel-body col-sm-12">
-        <form onSubmit={this.onSubmit.bind(this)} className="col-sm-10">
+      <div className="panel-body">
+        <form onSubmit={this.onSubmit.bind(this)}>
 
-            <div className='row'>
-              <input type='text'
+          <div className='row'>
+        
+              <input
+                type='text'
                 onChange={this.onChange.bind(this)}
                 value={this.state.currentInput}
                 />
+
+
               <button className="btn btn-primary">Submit</button>
-            </div>
+
+          </div>
+
 
         </form>
       </div>

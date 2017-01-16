@@ -11,11 +11,13 @@ class First extends React.Component{
       margin:10,
     };
     return(
+      <div className='container'>
       <div style={divStyle} className="panel panel-primary col-sm-6">
         <div style={divStyle} className="panel-heading">
           <h3>Algebra Problem Solver</h3>
         </div>
         <EnterProblem />
+      </div>
       </div>
     )
   }

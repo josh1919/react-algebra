@@ -22220,14 +22220,15 @@ class EnterProblem extends React.Component {
   render() {
     return React.createElement(
       'div',
-      { className: 'row panel-body col-sm-12' },
+      { className: 'panel-body' },
       React.createElement(
         'form',
-        { onSubmit: this.onSubmit.bind(this), className: 'col-sm-10' },
+        { onSubmit: this.onSubmit.bind(this) },
         React.createElement(
           'div',
           { className: 'row' },
-          React.createElement('input', { type: 'text',
+          React.createElement('input', {
+            type: 'text',
             onChange: this.onChange.bind(this),
             value: this.state.currentInput
           }),
@@ -22259,17 +22260,21 @@ class First extends React.Component {
     };
     return React.createElement(
       'div',
-      { style: divStyle, className: 'panel panel-primary col-sm-6' },
+      { className: 'container' },
       React.createElement(
         'div',
-        { style: divStyle, className: 'panel-heading' },
+        { style: divStyle, className: 'panel panel-primary col-sm-6' },
         React.createElement(
-          'h3',
-          null,
-          'Algebra Problem Solver'
-        )
-      ),
-      React.createElement(EnterProblem, null)
+          'div',
+          { style: divStyle, className: 'panel-heading' },
+          React.createElement(
+            'h3',
+            null,
+            'Algebra Problem Solver'
+          )
+        ),
+        React.createElement(EnterProblem, null)
+      )
     );
   }
 }
@@ -22395,7 +22400,6 @@ module.exports = ProblemRow;
 },{"react":184,"react-dom":33}],189:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
-//var algebra = require('../../node_modules/algebra.js/algebra.js');
 var algebra = require("algebra.js");
 var Fraction = algebra.Fraction;
 var Expression = algebra.Expression;
@@ -22405,46 +22409,55 @@ class ProblemRows extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentProblem: this.props.myProblem
+      currentProblem: this.props.myProblem,
+      hasSimplified: false
     };
+
+    this.handleSimplify = this.handleSimplify.bind(this);
+  }
+  handleSimplify() {
+
+    //var myStateProblemInput = algebra.parse(this.state.currentProblem);
+    this.setState({
+      //currentProblem: myStateProblemInput,
+      hasSimplified: true
+    });
   }
 
   //TODO: receive the raw current problem from previous component. fix the array here. and prepare for next step //TODO: may not need array afterall
   render() {
-    var preArray = this.state.currentProblem.replace(/ /g, '');
-    //TODO check to see there is only one kind of variable
-    //will split string at any found operator or equal sign but leave the delimiter
-    var numArray = preArray.split(/([-\+\*\/=])/g);
-    //  this.setState({currentProblem: numArray});
-    //TODO algebra logic goes here
+    //   var preArray = this.state.currentProblem.replace(/ /g, '');
+    //   //TODO check to see there is only one kind of variable
+    //   //will split string at any found operator or equal sign but leave the delimiter
+    //   var numArray = preArray.split(/([-\+\*\/=])/g);
+    // //  this.setState({currentProblem: numArray});
 
-    var x = new Expression("x");
+    //
+    // var x = new Expression("x");
 
-    var x1 = algebra.parse(this.state.currentProblem);
-    var output = 1;
-    //var myData = "my numArray is: " + numArray;
+    let x1 = algebra.parse(this.state.currentProblem).toString();
 
     //In this return goes next step which will make a new step after this one but it should append it to the end of the last one.
     return React.createElement(
       'div',
       null,
       React.createElement(
-        'h4',
-        null,
-        'Here is your problem\'s current state'
-      ),
-      React.createElement(
         'div',
         null,
-        'Problem = ',
+        'Problem => ',
         this.state.currentProblem
       ),
       React.createElement(
+        'button',
+        { onClick: this.handleSimplify },
+        'Combine Like Terms (simplify)'
+      ),
+      this.state.hasSimplified == true ? React.createElement(
         'div',
         null,
-        'Simplified => ',
-        x1.toString()
-      )
+        x1
+      ) : null //TODO Fix this, its the point of failure
+
     );
   }
 }

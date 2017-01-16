@@ -29,23 +29,18 @@ class ProblemRows extends React.Component{
 
     var myStateProblemInput = algebra.parse(this.state.currentProblem);
     this.setState({
-    //currentProblem: myStateProblemInput,
+
       hasSimplified: true
     });
 
   }
 
     render(){
-    //   var preArray = this.state.currentProblem.replace(/ /g, '');
-    //   //TODO check to see there is only one kind of variable
-    //   //will split string at any found operator or equal sign but leave the delimiter
-    //   var numArray = preArray.split(/([-\+\*\/=])/g);
-    // //  this.setState({currentProblem: numArray});
+
 
   let x1 = algebra.parse(this.state.currentProblem).toString();
 
 
-//In this return goes next step which will make a new step after this one but it should append it to the end of the last one.
       return (
         <div>
 

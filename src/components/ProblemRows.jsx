@@ -15,6 +15,15 @@ class ProblemRows extends React.Component{
 
     this.handleSimplify = this.handleSimplify.bind(this);
   }
+
+  componentDidUpdate(prevProps, prevState){
+    if(prevProps.myProblem !== this.props.myProblem){
+      this.setState ({
+        currentProblem:this.props.myProblem,
+        hasSimplified: false
+      })
+    }
+  }
    handleSimplify(){
 
 

@@ -27,7 +27,7 @@ class ProblemRows extends React.Component{
    handleSimplify(){
 
 
-    //var myStateProblemInput = algebra.parse(this.state.currentProblem);
+    var myStateProblemInput = algebra.parse(this.state.currentProblem);
     this.setState({
     //currentProblem: myStateProblemInput,
       hasSimplified: true
@@ -35,16 +35,12 @@ class ProblemRows extends React.Component{
 
   }
 
-  //TODO: receive the raw current problem from previous component. fix the array here. and prepare for next step //TODO: may not need array afterall
     render(){
     //   var preArray = this.state.currentProblem.replace(/ /g, '');
     //   //TODO check to see there is only one kind of variable
     //   //will split string at any found operator or equal sign but leave the delimiter
     //   var numArray = preArray.split(/([-\+\*\/=])/g);
     // //  this.setState({currentProblem: numArray});
-
-//
-// var x = new Expression("x");
 
   let x1 = algebra.parse(this.state.currentProblem).toString();
 
@@ -57,7 +53,7 @@ class ProblemRows extends React.Component{
 
           <button onClick={this.handleSimplify}>Combine Like Terms (simplify)</button>
           {
-            this.state.hasSimplified == true ? <div>{x1}</div> : null //TODO Fix this, its the point of failure
+            this.state.hasSimplified == true ? <ProblemRows myProblem={algebra.parse(this.state.currentProblem).toString()} /> : null
           }
 
 

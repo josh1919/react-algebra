@@ -1,10 +1,19 @@
 var React = require('react');
 var algebra = require("algebra.js");
-var ProblemList = require('./ProblemList.jsx'); 
+var ProblemList = require('./ProblemList.jsx');
 
 var Fraction = algebra.Fraction;
 var Expression = algebra.Expression;
 var Equation = algebra.Equation;
+
+
+// var preArray = this.state.newElementString.replace(/ /g, '');
+//TODO check to see there is only one kind of variable
+//will split string at any found operator or equal sign but leave the delimiter
+// var numArray = preArray.split(/([-\+\*\/=])/g);
+// this.setState({exportArray: numArray});
+//  ReactDOM.render(<ProblemRow problem={this.state.exportArray} />, document.getElementById('problem'));
+
 
 class ProblemContainer extends React.Component{
   constructor(props){

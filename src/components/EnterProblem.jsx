@@ -26,14 +26,14 @@ class EnterProblem extends React.Component{
   onSubmit(e){
     e.preventDefault();
     //removes all white space in inputed problem
-    var preArray = this.state.currentInput.replace(/ /g, '');
+    var preArray = this.state.currentInput.replace(/ /g, '').toString();
     //TODO check to see there is only one kind of variable
 
 
     //ReactDOM.render(<ProblemContainer myProblem={preArray}/>, document.getElementById('problem-row'));
     //Does this go after so this render function is not getting something empty?
     this.setState({
-      //currentInput: '',
+      currentInput: preArray,
       submitted: true
     });
   }

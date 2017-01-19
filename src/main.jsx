@@ -1,8 +1,5 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var InitialSetup = require('./components/InitialSetup.jsx');
-var First = require('./components/First.jsx');
+var MainContainer = require('./components/MainContainer.jsx');
 
-
-//ReactDOM.render(<InitialSetup />, document.getElementById('main'));
-ReactDOM.render(<First />, document.getElementById('first'));
+ReactDOM.render(<MainContainer />, document.getElementById('main-container'));

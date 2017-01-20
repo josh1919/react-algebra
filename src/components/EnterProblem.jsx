@@ -11,6 +11,8 @@ class EnterProblem extends React.Component{
     };
     this.onReset = this.onReset.bind(this)
   }
+
+
   onReset(){
     this.setState({
       currentInput:'',
@@ -38,29 +40,34 @@ class EnterProblem extends React.Component{
     });
   }
   render(){
+    let divStyle={
+      margin:10,
+    };
+
     return (
 
-      <div className="panel-body">
+      <div className='row' style={divStyle}>
         <form onSubmit={this.onSubmit.bind(this)}>
+          <div className='input-group'>
 
-          <div className='row'>
-
-            <input
-              type='text'
-              onChange={this.onChange.bind(this)}
-              value={this.state.currentInput}
-              />
-
-            <button className="btn btn-primary">Submit</button>
+            <input className='form-control' onChange={this.onChange.bind(this)} value={this.state.currentInput}/>
+            <span className='input-group-btn'>
+              <button className='btn btn-primary' >Submit</button>
+            </span>
           </div>
         </form>
-          <button className="btn" onClick={this.onReset}>Reset</button>
+
         {this.state.submitted ? <ProblemContainer myProblem={this.state.currentInput} /> : null}
+        <button className="btn col-xs-12" onClick={this.onReset}>Reset</button>
       </div>
 
     )
   }
 }
+
+
+
+
 
 
 

@@ -25,6 +25,14 @@ class ProblemContainer extends React.Component{
     this.handleSimplify = this.handleSimplify.bind(this);
 
   }
+  componentWillReceiveProps(nextProps){
+    if(this.props.myProblem !== nextProps.myProblem){
+      this.setState({
+        currentProblem: [nextProps.myProblem], //TODO solution may be here
+        hasSimplified: false
+      });
+    }
+  }
 
   handleSimplify(){
     var myStateProblemInput = algebra.parse(this.state.currentProblem[this.state.currentProblem.length -1]).toString();
@@ -45,6 +53,7 @@ class ProblemContainer extends React.Component{
          <ProblemList myProblem={this.state.currentProblem} />
 
         <button className="btn btn-primary col-sm-6" onClick={this.handleSimplify}>Combine Like Terms (simplify)</button>
+
       </div>
     )
   }

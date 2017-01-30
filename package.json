@@ -1,5 +1,5 @@
 {
-  "name": "react-skeleton",
+  "name": "react-algebra",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/josh1919/react-skeleton.git"
+    "url": "git+https://github.com/josh1919/react-algebra.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/josh1919/react-skeleton/issues"
+    "url": "https://github.com/josh1919/react-algebra/issues"
   },
-  "homepage": "https://github.com/josh1919/react-skeleton#readme",
+  "homepage": "https://github.com/josh1919/react-algebra#readme",
   "dependencies": {
     "algebra.js": "^0.2.6",
     "babel-preset-react": "^6.16.0",

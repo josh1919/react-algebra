@@ -10,26 +10,47 @@ class ProblemContainer extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      currentProblem:[this.props.myProblem],
-      hasSimplified:false
+      currentProblem:[this.props.myProblem]
     };
     this.handleSimplify = this.handleSimplify.bind(this);
-
   }
   componentWillReceiveProps(nextProps){
     if(this.props.myProblem !== nextProps.myProblem){
       this.setState({
-        currentProblem: [nextProps.myProblem],
-        hasSimplified: false
+        currentProblem: [nextProps.myProblem]
       });
     }
   }
+
 
   handleSimplify(){
     //TODO figure out what to do when I get a division problem
     var myCurrentProblem = this.state.currentProblem[this.state.currentProblem.length -1];
     var myStateProblemInput = algebra.parse(this.state.currentProblem[this.state.currentProblem.length -1]).toString();
     var prePush;
+    function switchFunction(item){
+      switch (item) {
+
+        case "+":
+        return "-"
+        break;
+        case "-":
+        return "+"
+        break;
+        default:
+        return "-"
+      }
+    }
+    function prePushToCurrentProblem(item){
+      currentProblemSideA.push(item);
+      currentProblemSideB.push(item);
+      currentProblemSideA = currentProblemSideA.toString();
+      currentProblemSideB = currentProblemSideB.toString();
+      myCurrentProblem = currentProblemSideA + "=" + currentProblemSideB;
+      myCurrentProblem = myCurrentProblem.replace(/,/g, '');
+      myCurrentProblem = myCurrentProblem.replace(/ /g, '');
+
+    }
     console.log("*******************************************");
     console.log("this.state.currentProblem: " + this.state.currentProblem);
     console.log("myCurrentProblem: " + myCurrentProblem);
@@ -92,27 +113,10 @@ class ProblemContainer extends React.Component{
           }
         }
 
-
-        switch (currentProblemSideB[tempVariableNum -1]) {
-
-          case "+":
-          prePush = "-"
-          break;
-          case "-":
-          prePush = "+"
-          break;
-          default:
-          prePush = "-"
-        }
-
+        prePush = switchFunction(currentProblemSideB[tempVariableNum -1]);
         prePush = prePush + currentProblemSideB[tempVariableNum];
-        currentProblemSideA.push(prePush);
-        currentProblemSideB.push(prePush);
-        currentProblemSideA = currentProblemSideA.toString();
-        currentProblemSideB = currentProblemSideB.toString();
-        myCurrentProblem = currentProblemSideA + "=" + currentProblemSideB;
-        myCurrentProblem = myCurrentProblem.replace(/,/g, '');
-        myCurrentProblem = myCurrentProblem.replace(/ /g, '');
+        prePushToCurrentProblem(prePush);
+
         var problemListHolder = this.state.currentProblem;
         problemListHolder.push(myCurrentProblem);
         console.log("problemListHolder: " + problemListHolder);
@@ -131,27 +135,9 @@ class ProblemContainer extends React.Component{
           }
         }
 
-        switch (currentProblemSideA[tempNumTermNum -1]) {
-
-          case "+":
-          prePush = "-"
-          break;
-          case "-":
-          prePush = "+"
-          break;
-          default:
-          prePush = "-"
-        }
-
+        prePush = switchFunction(currentProblemSideB[tempVariableNum -1]);
         prePush = prePush + currentProblemSideA[tempNumTermNum];
-        console.log("prePush+currentProblemSideA: " + prePush );
-        currentProblemSideA.push(prePush);
-        currentProblemSideB.push(prePush);
-        currentProblemSideA = currentProblemSideA.toString();
-        currentProblemSideB = currentProblemSideB.toString();
-        myCurrentProblem = currentProblemSideA + "=" + currentProblemSideB;
-        myCurrentProblem = myCurrentProblem.replace(/,/g, '');
-        myCurrentProblem = myCurrentProblem.replace(/ /g, '');
+        prePushToCurrentProblem(prePush);
         var problemListHolder = this.state.currentProblem;
         problemListHolder.push(myCurrentProblem);
         console.log("problemListHolder: " + problemListHolder);
@@ -160,36 +146,24 @@ class ProblemContainer extends React.Component{
         })
 
       } else if(countSideA == countSideB && countSideA == 1){
-        console.log("should be division");
-        console.log("currentProblemSideA[0]: " + currentProblemSideA[0]);
+        console.log("divide number thats multiplying with the variable: should be final step");
+
         //TODO fix these next lines. they are wrong because they assume they are recieving a string [actually receives an array]. I need to fix them to prepare for the Simplification
         // when I go to
-         var temp;
-        // var divider = currentProblemSideA.match(/\d/g);
-        // currentProblemSideA = currentProblemSideA + "/" + divider;
-
+        var temp;
         if(currentProblemSideA[0] == "-"){
           temp = "/(-" + currentProblemSideA[1].match(/\d/g) + ")"
         } else {
           temp = "/(" + currentProblemSideA[0].match(/\d/g) + ")";
         }
 
-        //prePush = prePush + currentProblemSideA[tempNumTermNum];
-        console.log("temp before pushed to array: " + temp );
-        currentProblemSideA.push(temp);
-        currentProblemSideB.push(temp);
-        currentProblemSideA = currentProblemSideA.toString();
-        currentProblemSideB = currentProblemSideB.toString();
-        myCurrentProblem = currentProblemSideA + "=" + currentProblemSideB;
-        myCurrentProblem = myCurrentProblem.replace(/,/g, '');
-        myCurrentProblem = myCurrentProblem.replace(/ /g, '');
+        prePushToCurrentProblem(temp);
         var problemListHolder = this.state.currentProblem;
         problemListHolder.push(myCurrentProblem);
         console.log("problemListHolder: " + problemListHolder);
         this.setState({
           currentProblem: problemListHolder
         })
-
       }
 
 
@@ -198,8 +172,7 @@ class ProblemContainer extends React.Component{
       var problemListHolder = this.state.currentProblem;
       problemListHolder.push(myStateProblemInput);
       this.setState({
-        currentProblem: problemListHolder,
-        hasSimplified: true
+        currentProblem: problemListHolder
       });
     }
   }
@@ -214,9 +187,5 @@ class ProblemContainer extends React.Component{
   }
 
 }
-
-
-
-
 
 module.exports = ProblemContainer;

@@ -14,7 +14,7 @@ class MainContainer extends React.Component{
       <div className='container'>
         <div style={divStyle} className="panel panel-primary col-xs-12 col-sm-9 col-md-6">
           <div style={divStyle} className="panel-heading">
-            <h3>Algebra Problem Solver</h3>
+            <h3>Basic Algebra Problem Solver</h3>
           </div>
           <EnterProblem />
         </div>

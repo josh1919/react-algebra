@@ -67,13 +67,13 @@ class ProblemContainer extends React.Component{
       //break up into array elements and count terms for SideA
       var countSideA = 0
       var countSideAVariables = 0
-      currentProblemSideA = currentProblemSideA.split(/([-\+\*\/])/g);
+      currentProblemSideA = currentProblemSideA.split(/([-\+\*])/g);
       //remove empty space created if leading term is negative
       if(currentProblemSideA[0] === "" || currentProblemSideA[0] === " "){
         currentProblemSideA.splice(0,1);
       }
       for (var i = 0; i < currentProblemSideA.length; i++) {
-        if(!currentProblemSideA[i].match(/([-\+\*\/=])/)){
+        if(!currentProblemSideA[i].match(/([-\+\*])/)){
           countSideA++;
         }
         if(currentProblemSideA[i].match(/([A-Za-z])/)){
@@ -84,13 +84,13 @@ class ProblemContainer extends React.Component{
       //break up into array elements and count terms for SideB
       var countSideB = 0;
       var countSideBVariables = 0;
-      currentProblemSideB = currentProblemSideB.split(/([-\+\*\/])/g);
+      currentProblemSideB = currentProblemSideB.split(/([-\+\*])/g);
       //remove empty space created if leading term is negative
       if(currentProblemSideB[0] === "" || currentProblemSideB[0] === " "){
         currentProblemSideB.splice(0,1);
       }
       for (var i = 0; i < currentProblemSideB.length; i++) {
-        if(!currentProblemSideB[i].match(/([-\+\*\/=])/)){
+        if(!currentProblemSideB[i].match(/([-\+\*=])/)){
           countSideB++;
         }
         if(currentProblemSideB[i].match(/([A-Za-z])/)){
@@ -101,14 +101,14 @@ class ProblemContainer extends React.Component{
       console.log("currentProblemSideA: " + currentProblemSideA);
       console.log("currentProblemSideB: " + currentProblemSideB);
 
-      if(countSideA == countSideB){
+      if(countSideA == countSideB){//TODO 2/22 Multiply away the reciprocal
         if(countSideA == 1){
           if(countSideAVariables == 1  && !currentProblemSideA.toString().match(/\d/) || countSideBVariables == 1  && !currentProblemSideB.toString().match(/\d/)){
             //problem is over
             //break;
             console.log("Problem is over");
           }
-          if(currentProblemSideA.toString().match(/\d/) && currentProblemSideA.toString().match(/[A-Za-z]/)){ // Divide or multiply away to simplify
+          if(currentProblemSideA.toString().match(/\d/) && currentProblemSideA.toString().match(/[A-Za-z]/) && !currentProblemSideA.toString().match(/\//)){ // Divide or multiply away to simplify
             //divide away number from side A
             console.log("Should DIVIDE currentProblemSideA in if when countSideA == countSideB: " + currentProblemSideA.toString());
             if(currentProblemSideA.toString().charAt(0) == "-"){
@@ -117,16 +117,30 @@ class ProblemContainer extends React.Component{
               temp = "/(" + currentProblemSideA.toString().match(/\d/g) + ")";
             }
 
-          } else if (currentProblemSideB.toString().match(/\d/) && currentProblemSideB.toString().match(/[A-Za-z]/)) {
+          } else if (currentProblemSideB.toString().match(/\d/) && currentProblemSideB.toString().match(/[A-Za-z]/) && !currentProblemSideB.toString().match(/\//)) {
             console.log("DIVIDE away currentProblemSideB");
             if(currentProblemSideB.toString().charAt(0) == "-"){
               temp = "/(-" + currentProblemSideB.toString().match(/\d/g) + ")"
             } else {
               temp = "/(" + currentProblemSideB.toString().match(/\d/g) + ")";
             }
+          } else if (currentProblemSideA.toString().match(/\//) && currentProblemSideA.toString().match(/[A-Za-z]/)) {
+            console.log("multiply by reciprocal (SideA)");
+            var reciprocalPrep = currentProblemSideA.toString().replace(/[A-Za-z]/,'');
+           reciprocalPrep = reciprocalPrep.split(/\//);
+
+            temp = "*(" + reciprocalPrep[1].toString() + "/" + reciprocalPrep[0].toString() + ")";
+
+          } else if (currentProblemSideB.toString().match(/\//) && currentProblemSideB.toString().match(/[A-Za-z]/)) {
+            console.log("multiply by reciprocal (SideB)");
+            var reciprocalPrep = currentProblemSideB.toString().replace(/[A-Za-z]/,'');
+           reciprocalPrep = reciprocalPrep.split(/\//);
+
+            temp = "*(" + reciprocalPrep[1].toString() + "/" + reciprocalPrep[0].toString() + ")";
+
           }
         } else { //assumes countSideA and countSideB is the same but they contain more than one term
-          //TODO 2/21/17 add or subtract away
+          console.log("countSideA and countSideB is the same but they contain more than one term");
           if(currentProblemSideA[0] == "-"){
             temp = "+" + currentProblemSideA[1];
           } else {

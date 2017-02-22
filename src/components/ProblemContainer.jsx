@@ -22,9 +22,9 @@ class ProblemContainer extends React.Component{
     }
   }
 
-
   handleSimplify(){
-    //TODO figure out what to do when I get a division problem
+    var temp;
+    var problemListHolder;
     var myCurrentProblem = this.state.currentProblem[this.state.currentProblem.length -1];
     var myStateProblemInput = algebra.parse(this.state.currentProblem[this.state.currentProblem.length -1]).toString();
     var prePush;
@@ -51,11 +51,15 @@ class ProblemContainer extends React.Component{
       myCurrentProblem = myCurrentProblem.replace(/ /g, '');
 
     }
-    console.log("*******************************************");
-    console.log("this.state.currentProblem: " + this.state.currentProblem);
-    console.log("myCurrentProblem: " + myCurrentProblem);
-    console.log("myStateProblemInput: " + myStateProblemInput);
-    if(myCurrentProblem == myStateProblemInput){
+
+    if(myCurrentProblem !== myStateProblemInput){
+      problemListHolder = this.state.currentProblem;
+      problemListHolder.push(myStateProblemInput);
+      this.setState({
+        currentProblem: problemListHolder
+      });
+    } else {
+      //If it cannot simplify it will come here
       var currentProblemSplit = myCurrentProblem.split(/=/);
       var currentProblemSideA = currentProblemSplit[0];
       var currentProblemSideB = currentProblemSplit[1];
@@ -94,97 +98,117 @@ class ProblemContainer extends React.Component{
         }
       }
 
-      console.log("countSideA: " + countSideA);
-      console.log("countSideAVariables: " + countSideAVariables);
-      console.log("countSideB: " + countSideB);
-      console.log("countSideBVariables: " + countSideBVariables);
+      console.log("currentProblemSideA: " + currentProblemSideA);
+      console.log("currentProblemSideB: " + currentProblemSideB);
 
-      //move term from one side to the other // Moves variables to sideA
-      if(countSideBVariables > 0){
-        console.log("move variables from Side B to Side A");
-        //console.log("countSideAVariables > countSideBVariables && (countSideA-countSideAVariables) > (countSideB - countSideBVariables)");
-        //move variables to sideA
+      if(countSideA == countSideB){
+        if(countSideA == 1){
+          if(countSideAVariables == 1  && !currentProblemSideA.toString().match(/\d/) || countSideBVariables == 1  && !currentProblemSideB.toString().match(/\d/)){
+            //problem is over
+            //break;
+            console.log("Problem is over");
+          }
+          if(currentProblemSideA.toString().match(/\d/) && currentProblemSideA.toString().match(/[A-Za-z]/)){ // Divide or multiply away to simplify
+            //divide away number from side A
+            console.log("Should DIVIDE currentProblemSideA in if when countSideA == countSideB: " + currentProblemSideA.toString());
+            if(currentProblemSideA.toString().charAt(0) == "-"){
+              temp = "/(-" + currentProblemSideA.toString().match(/\d/g) + ")"
+            } else {
+              temp = "/(" + currentProblemSideA.toString().match(/\d/g) + ")";
+            }
 
-        var tempVariableNum;
+          } else if (currentProblemSideB.toString().match(/\d/) && currentProblemSideB.toString().match(/[A-Za-z]/)) {
+            console.log("DIVIDE away currentProblemSideB");
+            if(currentProblemSideB.toString().charAt(0) == "-"){
+              temp = "/(-" + currentProblemSideB.toString().match(/\d/g) + ")"
+            } else {
+              temp = "/(" + currentProblemSideB.toString().match(/\d/g) + ")";
+            }
+          }
+        } else { //assumes countSideA and countSideB is the same but they contain more than one term
+          //TODO 2/21/17 add or subtract away
+          if(currentProblemSideA[0] == "-"){
+            temp = "+" + currentProblemSideA[1];
+          } else {
+            temp = "-" + currentProblemSideA[0];
+          }
+
+        }
+
+      } else {//else if countSideA != countSideB {...}
+      console.log("countSideA != countSideB");
+      if(countSideA > countSideB && countSideBVariables > 0){
+        for (var i = 0; i < currentProblemSideA.length; i++) {
+          if(currentProblemSideA[i].match(/[A-Za-z]/) ){
+            if(currentProblemSideA[i-1] == null){
+              temp = "-"
+            } else {
+              temp = "+"
+            }
+            temp = temp + currentProblemSideA[i];
+            break;
+          }
+        }
+      } else if (countSideA < countSideB && countSideAVariables > 0){
         for (var i = 0; i < currentProblemSideB.length; i++) {
           if(currentProblemSideB[i].match(/[A-Za-z]/)){
-            tempVariableNum = i;
+            if(currentProblemSideB[i-1] == null){
+              temp = "-"
+            } else {
+              temp = "+"
+            }
+            temp = temp + currentProblemSideB[i];
             break;
           }
         }
-
-        prePush = switchFunction(currentProblemSideB[tempVariableNum -1]);
-        prePush = prePush + currentProblemSideB[tempVariableNum];
-        prePushToCurrentProblem(prePush);
-
-        var problemListHolder = this.state.currentProblem;
-        problemListHolder.push(myCurrentProblem);
-        console.log("problemListHolder: " + problemListHolder);
-        this.setState({
-          currentProblem: problemListHolder
-        })
-      } else if(countSideA > countSideAVariables) { //TODO fix this so that if the number are on sideA
-        //move numbers to sideB
-        console.log("countSideA - countSideAVariables > countSideA - countSideBVariables ELSE IF");
-        var tempNumTermNum;
-        console.log("currentProblemSideA: " + currentProblemSideA);
+      } else if(countSideA > countSideB && countSideBVariables == 0){
         for (var i = 0; i < currentProblemSideA.length; i++) {
-          if(!currentProblemSideA[i].match(/[A-Za-z\+\*\/=-]/)){
-            tempNumTermNum = i;
+          if(currentProblemSideA[i].match(/\d/) && !currentProblemSideA[i].match(/[A-Za-z-\+\*\/]/)){
+            if(currentProblemSideA[i-1] == null || currentProblemSideA[i-1] == "+"){
+              temp = "-"
+            } else {
+              temp = "+"
+            }
+            temp = temp + currentProblemSideA[i];
             break;
           }
         }
-
-        prePush = switchFunction(currentProblemSideB[tempVariableNum -1]);
-        prePush = prePush + currentProblemSideA[tempNumTermNum];
-        prePushToCurrentProblem(prePush);
-        var problemListHolder = this.state.currentProblem;
-        problemListHolder.push(myCurrentProblem);
-        console.log("problemListHolder: " + problemListHolder);
-        this.setState({
-          currentProblem: problemListHolder
-        })
-
-      } else if(countSideA == countSideB && countSideA == 1){
-        console.log("divide number thats multiplying with the variable: should be final step");
-
-        //TODO fix these next lines. they are wrong because they assume they are recieving a string [actually receives an array]. I need to fix them to prepare for the Simplification
-        // when I go to
-        var temp;
-        if(currentProblemSideA[0] == "-"){
-          temp = "/(-" + currentProblemSideA[1].match(/\d/g) + ")"
-        } else {
-          temp = "/(" + currentProblemSideA[0].match(/\d/g) + ")";
+      } else if (countSideA < countSideB && countSideAVariables == 0) {
+        for (var i = 0; i < currentProblemSideB.length; i++) {
+          if(currentProblemSideB[i].match(/\d/) && !currentProblemSideB[i].match(/[A-Za-z-\+\*\/]/)){
+            if(currentProblemSideB[i-1] == null || currentProblemSideB[i-1] == "+"){
+              temp = "-"
+            } else {
+              temp = "+"
+            }
+            temp = temp + currentProblemSideB[i];
+            break;
+          }
         }
-
-        prePushToCurrentProblem(temp);
-        var problemListHolder = this.state.currentProblem;
-        problemListHolder.push(myCurrentProblem);
-        console.log("problemListHolder: " + problemListHolder);
-        this.setState({
-          currentProblem: problemListHolder
-        })
       }
-
-
-    } else {
-      console.log("Simplification");
-      var problemListHolder = this.state.currentProblem;
-      problemListHolder.push(myStateProblemInput);
-      this.setState({
-        currentProblem: problemListHolder
-      });
     }
+
+    console.log("temp: " + temp);
+    prePushToCurrentProblem(temp);
+    problemListHolder = this.state.currentProblem;
+    problemListHolder.push(myCurrentProblem);
+    console.log("problemListHolder: " + problemListHolder);
+    this.setState({
+      currentProblem: problemListHolder
+    });
+
   }
 
-  render(){
-    return(
-      <div className="panel">
-        <ProblemList myProblem={this.state.currentProblem} />
-        <button className="btn btn-primary col-sm-6" onClick={this.handleSimplify}>Simplify</button>
-      </div>
-    )
-  }
+}
+
+render(){
+  return(
+    <div className="panel">
+      <ProblemList myProblem={this.state.currentProblem} />
+      <button className="btn btn-primary col-sm-6" onClick={this.handleSimplify}>Simplify</button>
+    </div>
+  )
+}
 
 }
 

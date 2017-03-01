@@ -28,6 +28,7 @@ class ProblemContainer extends React.Component{
     var myCurrentProblem = this.state.currentProblem[this.state.currentProblem.length -1];
     var myStateProblemInput = algebra.parse(this.state.currentProblem[this.state.currentProblem.length -1]).toString();
     var prePush;
+    var negSign = '';
     function switchFunction(item){
       switch (item) {
 
@@ -126,17 +127,26 @@ class ProblemContainer extends React.Component{
             }
           } else if (currentProblemSideA.toString().match(/\//) && currentProblemSideA.toString().match(/[A-Za-z]/)) {
             console.log("multiply by reciprocal (SideA)");
+            if(currentProblemSideA.toString().charAt(0) == "-"){
+              negSign = "-";
+            }
             var reciprocalPrep = currentProblemSideA.toString().replace(/[A-Za-z]/,'');
-           reciprocalPrep = reciprocalPrep.split(/\//);
+            reciprocalPrep = reciprocalPrep.replace(/-/, '');
+            reciprocalPrep = reciprocalPrep.split(/\//);
 
-            temp = "*(" + reciprocalPrep[1].toString() + "/" + reciprocalPrep[0].toString() + ")";
+            temp = "*(" + negSign +  reciprocalPrep[1].toString() + "/" + reciprocalPrep[0].toString() + ")";
 
           } else if (currentProblemSideB.toString().match(/\//) && currentProblemSideB.toString().match(/[A-Za-z]/)) {
             console.log("multiply by reciprocal (SideB)");
-            var reciprocalPrep = currentProblemSideB.toString().replace(/[A-Za-z]/,'');
-           reciprocalPrep = reciprocalPrep.split(/\//);
+            if(currentProblemSideB.toString().charAt(0) == "-"){
+              negSign = "-";
+            }
 
-            temp = "*(" + reciprocalPrep[1].toString() + "/" + reciprocalPrep[0].toString() + ")";
+            var reciprocalPrep = currentProblemSideB.toString().replace(/[A-Za-z]/,'');
+            reciprocalPrep = reciprocalPrep.replace(/-/, '');
+            reciprocalPrep = reciprocalPrep.split(/\//);
+
+            temp = "*(" + negSign + reciprocalPrep[1].toString() + "/" + reciprocalPrep[0].toString() + ")";
 
           }
         } else { //assumes countSideA and countSideB is the same but they contain more than one term

@@ -9,9 +9,8 @@ class EnterProblem extends React.Component{
       currentInput:'',
       submitted: false
     };
-    this.onReset = this.onReset.bind(this)
+    this.onReset = this.onReset.bind(this);
   }
-
 
   onReset(){
     this.setState({
@@ -64,11 +63,5 @@ class EnterProblem extends React.Component{
     )
   }
 }
-
-
-
-
-
-
 
 module.exports = EnterProblem;

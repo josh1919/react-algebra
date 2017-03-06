@@ -13,8 +13,13 @@ class ProblemContainer extends React.Component{
       currentProblem:[this.props.myProblem]
     };
     this.handleSimplify = this.handleSimplify.bind(this);
+    console.log('initial constructor');
+  }
+  componentWillMount(){
+    this.handleSimplify();
   }
   componentWillReceiveProps(nextProps){
+    console.log('componentWillReceiveProps');
     if(this.props.myProblem !== nextProps.myProblem){
       this.setState({
         currentProblem: [nextProps.myProblem]

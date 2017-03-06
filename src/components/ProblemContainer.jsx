@@ -55,7 +55,35 @@ class ProblemContainer extends React.Component{
       myCurrentProblem = currentProblemSideA + "=" + currentProblemSideB;
       myCurrentProblem = myCurrentProblem.replace(/,/g, '');
       myCurrentProblem = myCurrentProblem.replace(/ /g, '');
+    }
+    function tempSetup(mySide){
+      for (var i = 0; i < mySide.length; i++) {
+        if(mySide[i].match(/[A-Za-z]/) ){
+          if(mySide[i-1] == null){
+            temp = "-"
+          } else {
+            temp = "+"
+          }
+          temp = temp + mySide[i];
+          break;
+        }
+      }
+      return temp;
+    }
 
+    function tempSetup2(mySide){
+      for (var i = 0; i < mySide.length; i++) {
+        if(mySide[i].match(/\d/) && !mySide[i].match(/[A-Za-z-\+\*\/]/)){
+          if(mySide[i-1] == null || mySide[i-1] == "+"){
+            temp = "-"
+          } else {
+            temp = "+"
+          }
+          temp = temp + currentProblemSideA[i];
+          break;
+        }
+      }
+      return temp;
     }
 
     if(myCurrentProblem !== myStateProblemInput){
@@ -107,11 +135,12 @@ class ProblemContainer extends React.Component{
       console.log("currentProblemSideA: " + currentProblemSideA);
       console.log("currentProblemSideB: " + currentProblemSideB);
 
-      if(countSideA == countSideB){//TODO 2/22 Multiply away the reciprocal
+      if(countSideA == countSideB){//TODO
         if(countSideA == 1){
           if(countSideAVariables == 1  && !currentProblemSideA.toString().match(/\d/) || countSideBVariables == 1  && !currentProblemSideB.toString().match(/\d/)){
             //problem is over
             //break;
+            alert('problem already solved');
             console.log("Problem is over");
           }
           if(currentProblemSideA.toString().match(/\d/) && currentProblemSideA.toString().match(/[A-Za-z]/) && !currentProblemSideA.toString().match(/\//)){ // Divide or multiply away to simplify
@@ -167,53 +196,13 @@ class ProblemContainer extends React.Component{
       } else {//else if countSideA != countSideB {...}
       console.log("countSideA != countSideB");
       if(countSideA > countSideB && countSideBVariables > 0){
-        for (var i = 0; i < currentProblemSideA.length; i++) {
-          if(currentProblemSideA[i].match(/[A-Za-z]/) ){
-            if(currentProblemSideA[i-1] == null){
-              temp = "-"
-            } else {
-              temp = "+"
-            }
-            temp = temp + currentProblemSideA[i];
-            break;
-          }
-        }
+        temp = tempSetup(currentProblemSideA);
       } else if (countSideA < countSideB && countSideAVariables > 0){
-        for (var i = 0; i < currentProblemSideB.length; i++) {
-          if(currentProblemSideB[i].match(/[A-Za-z]/)){
-            if(currentProblemSideB[i-1] == null){
-              temp = "-"
-            } else {
-              temp = "+"
-            }
-            temp = temp + currentProblemSideB[i];
-            break;
-          }
-        }
+        temp = tempSetup(currentProblemSideB);
       } else if(countSideA > countSideB && countSideBVariables == 0){
-        for (var i = 0; i < currentProblemSideA.length; i++) {
-          if(currentProblemSideA[i].match(/\d/) && !currentProblemSideA[i].match(/[A-Za-z-\+\*\/]/)){
-            if(currentProblemSideA[i-1] == null || currentProblemSideA[i-1] == "+"){
-              temp = "-"
-            } else {
-              temp = "+"
-            }
-            temp = temp + currentProblemSideA[i];
-            break;
-          }
-        }
+        temp = tempSetup2(currentProblemSideA);
       } else if (countSideA < countSideB && countSideAVariables == 0) {
-        for (var i = 0; i < currentProblemSideB.length; i++) {
-          if(currentProblemSideB[i].match(/\d/) && !currentProblemSideB[i].match(/[A-Za-z-\+\*\/]/)){
-            if(currentProblemSideB[i-1] == null || currentProblemSideB[i-1] == "+"){
-              temp = "-"
-            } else {
-              temp = "+"
-            }
-            temp = temp + currentProblemSideB[i];
-            break;
-          }
-        }
+        temp - tempSetup2(currentProblemSideB);
       }
     }
 

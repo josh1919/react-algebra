@@ -1,11 +1,10 @@
 var React = require('react');
 var algebra = require("algebra.js");
 var ProblemList = require('./ProblemList.jsx');
-
 var Fraction = algebra.Fraction;
 var Expression = algebra.Expression;
 var Equation = algebra.Equation;
-//TODO 3/6 fix when no solution
+
 class ProblemContainer extends React.Component{
   constructor(props){
     super(props);
@@ -138,7 +137,7 @@ class ProblemContainer extends React.Component{
         currentProblemSideB.splice(0,1);
       }
       for (var i = 0; i < currentProblemSideB.length; i++) {
-        if(!currentProblemSideB[i].match(/([-\+\*=])/)){
+        if(!currentProblemSideB[i].match(/([-\+\*])/)){
           countSideB++;
         }
         if(currentProblemSideB[i].match(/([A-Za-z])/)){
@@ -153,9 +152,14 @@ class ProblemContainer extends React.Component{
         if(countSideA == 1){
           if(countSideAVariables == 1  && !currentProblemSideA.toString().match(/\d/) || countSideBVariables == 1  && !currentProblemSideB.toString().match(/\d/)){
             //problem is over
-            //break;
             stepListItem = "Problem Solved";
             console.log("Problem is over");
+          } else if (currentProblemSideA.toString().replace(/ /, '') == currentProblemSideB.toString().replace(/ /, '') && countSideAVariables + countSideBVariables == 0 ) {
+            console.log("infinite solutions");
+            stepListItem = "Problem finished, infinite solutions";
+          } else if (currentProblemSideA.toString().replace(/ /, '') !=  currentProblemSideB.toString().replace(/ /, '') && countSideAVariables + countSideBVariables == 0 ) {
+            console.log("No Soution");
+            stepListItem = "Problem finished, no solution";
           }
           if(currentProblemSideA.toString().match(/\d/) && currentProblemSideA.toString().match(/[A-Za-z]/) && !currentProblemSideA.toString().match(/\//)){
             //divide away number from side A

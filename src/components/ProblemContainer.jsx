@@ -5,12 +5,13 @@ var ProblemList = require('./ProblemList.jsx');
 var Fraction = algebra.Fraction;
 var Expression = algebra.Expression;
 var Equation = algebra.Equation;
-
+//TODO 3/6 fix when no solution
 class ProblemContainer extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      currentProblem:[this.props.myProblem]
+      currentProblem:[this.props.myProblem],
+      stepList: [this.props.stepList]
     };
     this.handleSimplify = this.handleSimplify.bind(this);
     console.log('initial constructor');
@@ -22,7 +23,8 @@ class ProblemContainer extends React.Component{
     console.log('componentWillReceiveProps');
     if(this.props.myProblem !== nextProps.myProblem){
       this.setState({
-        currentProblem: [nextProps.myProblem]
+        currentProblem: [nextProps.myProblem],
+        stepList: [this.props.stepList]
       });
     }
   }
@@ -30,13 +32,14 @@ class ProblemContainer extends React.Component{
   handleSimplify(){
     var temp;
     var problemListHolder;
+    var stepListHolder;
     var myCurrentProblem = this.state.currentProblem[this.state.currentProblem.length -1];
     var myStateProblemInput = algebra.parse(this.state.currentProblem[this.state.currentProblem.length -1]).toString();
     var prePush;
     var negSign = '';
+    var stepListItem = 'currently undefined: fix';
     function switchFunction(item){
       switch (item) {
-
         case "+":
         return "-"
         break;
@@ -60,14 +63,18 @@ class ProblemContainer extends React.Component{
       for (var i = 0; i < mySide.length; i++) {
         if(mySide[i].match(/[A-Za-z]/) ){
           if(mySide[i-1] == null){
-            temp = "-"
+            temp = "-";
+            stepListItem = "Subtract ";
           } else {
-            temp = "+"
+            temp = "+";
+            stepListItem = "Add ";
           }
           temp = temp + mySide[i];
+          stepListItem += mySide[i];
           break;
         }
       }
+      stepListItem += " from both sides";
       return temp;
     }
 
@@ -76,21 +83,28 @@ class ProblemContainer extends React.Component{
         if(mySide[i].match(/\d/) && !mySide[i].match(/[A-Za-z-\+\*\/]/)){
           if(mySide[i-1] == null || mySide[i-1] == "+"){
             temp = "-"
+            stepListItem = "Subtract ";
           } else {
             temp = "+"
+            stepListItem = "Add "
           }
-          temp = temp + currentProblemSideA[i];
+          temp = temp + mySide[i];
+          stepListItem += mySide[i];
           break;
         }
       }
+      stepListItem += " from both sides";
       return temp;
     }
 
     if(myCurrentProblem !== myStateProblemInput){
       problemListHolder = this.state.currentProblem;
       problemListHolder.push(myStateProblemInput);
+      stepListHolder = this.state.stepList;
+      stepListHolder.push("Combine like terms");
       this.setState({
-        currentProblem: problemListHolder
+        currentProblem: problemListHolder,
+        stepList: stepListHolder
       });
     } else {
       //If it cannot simplify it will come here
@@ -135,49 +149,61 @@ class ProblemContainer extends React.Component{
       console.log("currentProblemSideA: " + currentProblemSideA);
       console.log("currentProblemSideB: " + currentProblemSideB);
 
-      if(countSideA == countSideB){//TODO
+      if(countSideA == countSideB){
         if(countSideA == 1){
           if(countSideAVariables == 1  && !currentProblemSideA.toString().match(/\d/) || countSideBVariables == 1  && !currentProblemSideB.toString().match(/\d/)){
             //problem is over
             //break;
-            alert('problem already solved');
+            stepListItem = "Problem Solved";
             console.log("Problem is over");
           }
-          if(currentProblemSideA.toString().match(/\d/) && currentProblemSideA.toString().match(/[A-Za-z]/) && !currentProblemSideA.toString().match(/\//)){ // Divide or multiply away to simplify
+          if(currentProblemSideA.toString().match(/\d/) && currentProblemSideA.toString().match(/[A-Za-z]/) && !currentProblemSideA.toString().match(/\//)){
             //divide away number from side A
+            stepListItem = "Divide both sides by ";
             console.log("Should DIVIDE currentProblemSideA in if when countSideA == countSideB: " + currentProblemSideA.toString());
             if(currentProblemSideA.toString().charAt(0) == "-"){
-              temp = "/(-" + currentProblemSideA.toString().match(/\d/g) + ")"
+              temp = "/(-" + currentProblemSideA.toString().match(/\d/g) + ")";
+              stepListItem += "negative ";
             } else {
               temp = "/(" + currentProblemSideA.toString().match(/\d/g) + ")";
             }
+            stepListItem += currentProblemSideA.toString().match(/\d/g)
 
           } else if (currentProblemSideB.toString().match(/\d/) && currentProblemSideB.toString().match(/[A-Za-z]/) && !currentProblemSideB.toString().match(/\//)) {
             console.log("DIVIDE away currentProblemSideB");
+            stepListItem = "Divide both sides by ";
             if(currentProblemSideB.toString().charAt(0) == "-"){
               temp = "/(-" + currentProblemSideB.toString().match(/\d/g) + ")"
+              stepListItem += "negative ";
             } else {
               temp = "/(" + currentProblemSideB.toString().match(/\d/g) + ")";
             }
+            stepListItem += currentProblemSideB.toString().match(/\d/g);
           } else if (currentProblemSideA.toString().match(/\//) && currentProblemSideA.toString().match(/[A-Za-z]/)) {
             console.log("multiply by reciprocal (SideA)");
+            stepListItem = "Multiply both sides by ";
             if(currentProblemSideA.toString().charAt(0) == "-"){
               negSign = "-";
+              stepListItem += "negative ";
             }
             var reciprocalPrep = currentProblemSideA.toString().replace(/[A-Za-z]/,'');
             reciprocalPrep = reciprocalPrep.replace(/-/, '');
+            stepListItem += reciprocalPrep.toString();
             reciprocalPrep = reciprocalPrep.split(/\//);
 
             temp = "*(" + negSign +  reciprocalPrep[1].toString() + "/" + reciprocalPrep[0].toString() + ")";
 
           } else if (currentProblemSideB.toString().match(/\//) && currentProblemSideB.toString().match(/[A-Za-z]/)) {
             console.log("multiply by reciprocal (SideB)");
+            stepListItem = "Multiply both sides by ";
             if(currentProblemSideB.toString().charAt(0) == "-"){
               negSign = "-";
+              stepListItem += "negative ";
             }
 
             var reciprocalPrep = currentProblemSideB.toString().replace(/[A-Za-z]/,'');
             reciprocalPrep = reciprocalPrep.replace(/-/, '');
+            stepListItem += reciprocalPrep.toString();
             reciprocalPrep = reciprocalPrep.split(/\//);
 
             temp = "*(" + negSign + reciprocalPrep[1].toString() + "/" + reciprocalPrep[0].toString() + ")";
@@ -187,9 +213,12 @@ class ProblemContainer extends React.Component{
           console.log("countSideA and countSideB is the same but they contain more than one term");
           if(currentProblemSideA[0] == "-"){
             temp = "+" + currentProblemSideA[1];
+            stepListItem = "Add " + currentProblemSideA[1];
           } else {
             temp = "-" + currentProblemSideA[0];
+            stepListItem = "Subtract " + currentProblemSideA[0];
           }
+          stepListItem += " from both sides";
 
         }
 
@@ -210,9 +239,12 @@ class ProblemContainer extends React.Component{
     prePushToCurrentProblem(temp);
     problemListHolder = this.state.currentProblem;
     problemListHolder.push(myCurrentProblem);
+    stepListHolder = this.state.stepList;
+    stepListHolder.push(stepListItem);
     console.log("problemListHolder: " + problemListHolder);
     this.setState({
-      currentProblem: problemListHolder
+      currentProblem: problemListHolder,
+      stepList: stepListHolder
     });
 
   }
@@ -221,9 +253,14 @@ class ProblemContainer extends React.Component{
 
 render(){
   return(
-    <div className="panel">
-      <ProblemList myProblem={this.state.currentProblem} />
-      <button className="btn btn-primary col-sm-6" onClick={this.handleSimplify}>Simplify</button>
+    <div className="col-xs-12">
+      <div className="col-xs-6">
+        <ProblemList myProblem={this.state.currentProblem} />
+      </div>
+      <div className="col-xs-6">
+        <ProblemList className="col-xs-6" myProblem={this.state.stepList} />
+      </div>
+      <button className="btn btn-primary col-xs-12" onClick={this.handleSimplify}>Simplify</button>
     </div>
   )
 }

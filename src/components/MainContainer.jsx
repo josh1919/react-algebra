@@ -12,7 +12,7 @@ class MainContainer extends React.Component{
     };
     return(
       <div className='container'>
-        <div style={divStyle} className="panel panel-primary col-xs-12 col-sm-9 col-md-6">
+        <div style={divStyle} className="panel panel-primary col-xs-12 col-sm-12 col-md-9">
           <div style={divStyle} className="panel-heading">
             <h3>Basic Algebra Problem Solver</h3>
           </div>

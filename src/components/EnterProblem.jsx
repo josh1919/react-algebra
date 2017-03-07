@@ -35,6 +35,7 @@ class EnterProblem extends React.Component{
     //Does this go after so this render function is not getting something empty?
     this.setState({
       currentInput: preArray,
+      stepList: "Initial Problem",
       submitted: true
     });
   }
@@ -56,7 +57,7 @@ class EnterProblem extends React.Component{
           </div>
         </form>
 
-        {this.state.submitted ? <ProblemContainer myProblem={this.state.currentInput} /> : null}
+        {this.state.submitted ? <ProblemContainer myProblem={this.state.currentInput} stepList={this.state.stepList} /> : null}
         <button className="btn col-xs-12" onClick={this.onReset}>Reset</button>
       </div>
 

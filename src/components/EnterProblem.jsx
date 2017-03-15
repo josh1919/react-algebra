@@ -28,17 +28,23 @@ class EnterProblem extends React.Component{
     e.preventDefault();
     //removes all white space in inputed problem
     var preArray = this.state.currentInput.replace(/ /g, '').toString();
-    //TODO check to see there is only one kind of variable
+      //Input validation
+      if(!preArray.match(/[a-z][a-z]|[A-Z][A-Z]/g)){//input valid
 
+          this.setState({
+            currentInput: preArray,
+            stepList: "Initial Problem",
+            submitted: true
+          });
 
-    //ReactDOM.render(<ProblemContainer myProblem={preArray}/>, document.getElementById('problem-row'));
-    //Does this go after so this render function is not getting something empty?
-    this.setState({
-      currentInput: preArray,
-      stepList: "Initial Problem",
-      submitted: true
-    });
-  }
+      } else {//if input invalid
+        this.setState({
+          submitted: false
+        })
+        alert("input invalid, try something else");
+      }
+    };
+
   render(){
     let divStyle={
       margin:10,

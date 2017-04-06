@@ -29,7 +29,7 @@ class EnterProblem extends React.Component{
     //removes all white space in inputed problem
     var preArray = this.state.currentInput.replace(/ /g, '').toString();
       //Input validation
-      if(!preArray.match(/[a-z][a-z]|[A-Z][A-Z]/g)){//input valid
+      if(!preArray.match(/[a-z][a-z]|[A-Z][A-Z]|[A-Z][a-z]|[a-z][A-Z]/g)){//if it does not contain two variables in a row continue
 
           this.setState({
             currentInput: preArray,

@@ -62,8 +62,8 @@ class EnterProblem extends React.Component{
             </div>
           </form>
           :
-          <div>
-            <div className="col-xs-9 text-right">{this.state.currentInput}</div>
+          <div className="text-center" style={{margin:'10px',marginBottom:'10px', borderColor:'#337ab7',borderStyle:'solid',verticalAlign:'middle'}}>
+            <div className="col-xs-10" style={{fontWeight:'bold', fontSize:'1.6em'}}>{this.state.currentInput}</div>
             <button className="btn" onClick={this.onReset}>Reset</button>
           </div>
         }

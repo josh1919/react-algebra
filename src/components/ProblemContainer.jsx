@@ -256,6 +256,10 @@ class ProblemContainer extends React.Component{
 }
 
 render(){
+  let divStyle={
+    backgroundImage: 'linear-gradient(to bottom,#337ab7 0,#2e6da4 100%)',
+    color:'white'
+  }
   return(
     <div className="col-xs-12">
       <div className="col-xs-6">
@@ -264,7 +268,16 @@ render(){
       <div className="col-xs-6">
         <ProblemList className="col-xs-6" myProblem={this.state.stepList} />
       </div>
-      <button className="btn btn-primary col-xs-12" onClick={this.handleSimplify}>Simplify</button>
+      {
+        this.state.stepList[this.state.stepList.length-1] === "Problem Solved"
+        ?
+        <div className="col-xs-12 text-center" style={divStyle}>
+          <h2>Problem Solved</h2>
+          <h2>{this.state.currentProblem[this.state.currentProblem.length -1]}</h2>
+        </div>
+        :
+        <button className="btn btn-primary col-xs-12" onClick={this.handleSimplify}>Next Step</button>
+      }
     </div>
   )
 }

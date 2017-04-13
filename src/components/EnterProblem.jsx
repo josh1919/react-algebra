@@ -46,7 +46,15 @@ class EnterProblem extends React.Component{
   };
 
   render(){
-    let divStyle={margin:10,};
+    let divStyle={margin:10};
+    let postStyle = {
+      paddingBottom:'10px',
+      margin:'10px',
+      marginBottom:'10px',
+      borderBottom:'#337ab7',
+      borderBottomStyle:'solid',
+      verticalAlign:'middle'
+    }
 
     return (
 
@@ -62,13 +70,12 @@ class EnterProblem extends React.Component{
             </div>
           </form>
           :
-          <div className="text-center" style={{margin:'10px',marginBottom:'10px', borderColor:'#337ab7',borderStyle:'solid',verticalAlign:'middle'}}>
+          <div className="text-center" style={postStyle}>
             <div className="col-xs-10" style={{fontWeight:'bold', fontSize:'1.6em'}}>{this.state.currentInput}</div>
             <button className="btn" onClick={this.onReset}>Reset</button>
           </div>
         }
         {this.state.submitted ? <ProblemContainer myProblem={this.state.currentInput} stepList={this.state.stepList} /> : null}
-
       </div>
 
     )

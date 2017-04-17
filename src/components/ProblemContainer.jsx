@@ -32,8 +32,8 @@ class ProblemContainer extends React.Component{
     var temp;
     var problemListHolder;
     var stepListHolder;
-    var myCurrentProblem = this.state.currentProblem[this.state.currentProblem.length -1];
-    var myStateProblemInput = algebra.parse(this.state.currentProblem[this.state.currentProblem.length -1]).toString();
+    var myCurrentProblem = this.state.currentProblem[this.state.currentProblem.length -1].replace(/ /g, '');
+    var myStateProblemInput = algebra.parse(this.state.currentProblem[this.state.currentProblem.length -1]).toString().replace(/ /g, '');
     var prePush;
     var negSign = '';
     var stepListItem = 'currently undefined: fix';
@@ -154,10 +154,10 @@ class ProblemContainer extends React.Component{
             //problem is over
             stepListItem = "Problem Solved";
             console.log("Problem is over");
-          } else if (currentProblemSideA.toString().replace(/ /, '') == currentProblemSideB.toString().replace(/ /, '') && countSideAVariables + countSideBVariables == 0 ) {
+          } else if (currentProblemSideA.toString().replace(/ /g, '') == currentProblemSideB.toString().replace(/ /g, '') && countSideAVariables + countSideBVariables == 0 ) {
             console.log("infinite solutions");
             stepListItem = "Problem finished, infinite solutions";
-          } else if (currentProblemSideA.toString().replace(/ /, '') !=  currentProblemSideB.toString().replace(/ /, '') && countSideAVariables + countSideBVariables == 0 ) {
+          } else if (currentProblemSideA.toString().replace(/ /g, '') !=  currentProblemSideB.toString().replace(/ /g, '') && countSideAVariables + countSideBVariables == 0 ) {
             console.log("No Soution");
             stepListItem = "Problem finished, no solution";
           }
@@ -171,19 +171,19 @@ class ProblemContainer extends React.Component{
             } else {
               temp = "/(" + currentProblemSideA.toString().match(/\d/g) + ")";
             }
-            stepListItem += currentProblemSideA.toString().match(/\d/g)
+            stepListItem += currentProblemSideA.toString().match(/\d/g);
 
           } else if (currentProblemSideB.toString().match(/\d/) && currentProblemSideB.toString().match(/[A-Za-z]/) && !currentProblemSideB.toString().match(/\//)) {
             console.log("DIVIDE away currentProblemSideB");
             stepListItem = "Divide both sides by ";
             if(currentProblemSideB.toString().charAt(0) == "-"){
-              temp = "/(-" + currentProblemSideB.toString().match(/\d/g) + ")"
+              temp = "/(-" + currentProblemSideB.toString().match(/\d/g) + ")";
               stepListItem += "negative ";
             } else {
               temp = "/(" + currentProblemSideB.toString().match(/\d/g) + ")";
             }
             stepListItem += currentProblemSideB.toString().match(/\d/g);
-          } else if (currentProblemSideA.toString().match(/\//) && currentProblemSideA.toString().match(/[A-Za-z]/)) {
+          } else if (currentProblemSideA.toString().match(/\//g) && currentProblemSideA.toString().match(/[A-Za-z]/g)) {
             console.log("multiply by reciprocal (SideA)");
             stepListItem = "Multiply both sides by ";
             if(currentProblemSideA.toString().charAt(0) == "-"){
@@ -244,7 +244,7 @@ class ProblemContainer extends React.Component{
     problemListHolder = this.state.currentProblem;
     problemListHolder.push(myCurrentProblem);
     stepListHolder = this.state.stepList;
-    stepListHolder.push(stepListItem);
+    stepListHolder.push(stepListItem.replace(/,/,''));
     console.log("problemListHolder: " + problemListHolder);
     this.setState({
       currentProblem: problemListHolder,

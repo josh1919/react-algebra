@@ -44,6 +44,17 @@ class ProblemContainer extends React.Component{
     var countSideB;
     var countSideBVariables;
     var stepListItem = 'currently undefined: fix';
+    var finale = false;
+
+    function prePushToCurrentProblem(item){
+      currentProblemSideA.push(item);
+      currentProblemSideB.push(item);
+      currentProblemSideA = currentProblemSideA.toString();
+      currentProblemSideB = currentProblemSideB.toString();
+      myCurrentProblem = currentProblemSideA + "=" + currentProblemSideB;
+      myCurrentProblem = myCurrentProblem.replace(/,/g, '');
+      myCurrentProblem = myCurrentProblem.replace(/ /g, '');
+    }
 
     function problemSplitSidesAndCount(){
       currentProblemSplit = myCurrentProblem.split(/=/);
@@ -84,6 +95,7 @@ class ProblemContainer extends React.Component{
         }
       }
     }
+
     function switchFunction(item){
       switch (item) {
         case "+":
@@ -96,22 +108,7 @@ class ProblemContainer extends React.Component{
         return "-"
       }
     }
-    function prePushToCurrentProblem(item){
-      currentProblemSideA.push(item);
-      currentProblemSideB.push(item);
-      currentProblemSideA = currentProblemSideA.toString();
-      currentProblemSideB = currentProblemSideB.toString();
-      myCurrentProblem = currentProblemSideA + "=" + currentProblemSideB;
-      myCurrentProblem = myCurrentProblem.replace(/,/g, '');
-      myCurrentProblem = myCurrentProblem.replace(/ /g, '');
-    }
-    function stepListPusher(){
-      stepListHolder = this.state.stepList;
-      stepListHolder.push(stepListItem);
-      this.setState({
-        stepList: stepListHolder
-      });
-    }
+
     function tempSetup(mySide){
       for (var i = 0; i < mySide.length; i++) {
         if(mySide[i].match(/[A-Za-z]/) ){
@@ -267,7 +264,7 @@ class ProblemContainer extends React.Component{
   problemSplitSidesAndCount();
 
   if(countSideA == countSideB && countSideA == 1){
-    var finale = false;
+    finale = false;
     if(countSideAVariables == 1  && !currentProblemSideA.toString().match(/\d/) || countSideBVariables == 1  && !currentProblemSideB.toString().match(/\d/)){
       //problem is over
       finale = true;

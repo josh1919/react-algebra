@@ -150,17 +150,7 @@ class ProblemContainer extends React.Component{
 
       if(countSideA == countSideB){
         if(countSideA == 1){
-          if(countSideAVariables == 1  && !currentProblemSideA.toString().match(/\d/) || countSideBVariables == 1  && !currentProblemSideB.toString().match(/\d/)){
-            //problem is over
-            stepListItem = "Problem Solved";
-            console.log("Problem is over");
-          } else if (currentProblemSideA.toString().replace(/ /g, '') == currentProblemSideB.toString().replace(/ /g, '') && countSideAVariables + countSideBVariables == 0 ) {
-            console.log("infinite solutions");
-            stepListItem = "Problem finished, infinite solutions";
-          } else if (currentProblemSideA.toString().replace(/ /g, '') !=  currentProblemSideB.toString().replace(/ /g, '') && countSideAVariables + countSideBVariables == 0 ) {
-            console.log("No Soution");
-            stepListItem = "Problem finished, no solution";
-          }
+
           if(currentProblemSideA.toString().match(/\d/) && currentProblemSideA.toString().match(/[A-Za-z]/) && !currentProblemSideA.toString().match(/\//)){
             //divide away number from side A
             stepListItem = "Divide both sides by ";
@@ -251,6 +241,76 @@ class ProblemContainer extends React.Component{
       stepList: stepListHolder
     });
 
+  }
+
+
+  myCurrentProblem = this.state.currentProblem[this.state.currentProblem.length -1].replace(/ /g, '');
+   currentProblemSplit = myCurrentProblem.split(/=/);
+   currentProblemSideA = currentProblemSplit[0];
+   currentProblemSideB = currentProblemSplit[1];
+
+  //break up into array elements and count terms for SideA
+   countSideA = 0
+   countSideAVariables = 0
+  currentProblemSideA = currentProblemSideA.split(/([-\+\*])/g);
+  //remove empty space created if leading term is negative
+  if(currentProblemSideA[0] === "" || currentProblemSideA[0] === " "){
+    currentProblemSideA.splice(0,1);
+  }
+  for (var i = 0; i < currentProblemSideA.length; i++) {
+    if(!currentProblemSideA[i].match(/([-\+\*])/)){
+      countSideA++;
+    }
+    if(currentProblemSideA[i].match(/([A-Za-z])/)){
+      countSideAVariables++;
+    }
+  }
+
+  //break up into array elements and count terms for SideB
+   countSideB = 0;
+   countSideBVariables = 0;
+  currentProblemSideB = currentProblemSideB.split(/([-\+\*])/g);
+  //remove empty space created if leading term is negative
+  if(currentProblemSideB[0] === "" || currentProblemSideB[0] === " "){
+    currentProblemSideB.splice(0,1);
+  }
+  for (var i = 0; i < currentProblemSideB.length; i++) {
+    if(!currentProblemSideB[i].match(/([-\+\*])/)){
+      countSideB++;
+    }
+    if(currentProblemSideB[i].match(/([A-Za-z])/)){
+      countSideBVariables++;
+    }
+  }
+
+  if(countSideAVariables == 1  && !currentProblemSideA.toString().match(/\d/) || countSideBVariables == 1  && !currentProblemSideB.toString().match(/\d/)){
+    //problem is over
+    stepListItem = "Problem Solved";
+    console.log("Problem is over");
+    stepListHolder = this.state.stepList;
+    stepListHolder.push(stepListItem);
+    console.log("problemListHolder: " + problemListHolder);
+    this.setState({
+      stepList: stepListHolder
+    });
+  } else if (currentProblemSideA.toString().replace(/ /g, '') == currentProblemSideB.toString().replace(/ /g, '') && countSideAVariables + countSideBVariables == 0 ) {
+    console.log("infinite solutions");
+    stepListItem = "Problem finished, infinite solutions";
+    stepListHolder = this.state.stepList;
+    stepListHolder.push(stepListItem);
+    console.log("problemListHolder: " + problemListHolder);
+    this.setState({
+      stepList: stepListHolder
+    });
+  } else if (currentProblemSideA.toString().replace(/ /g, '') !=  currentProblemSideB.toString().replace(/ /g, '') && countSideAVariables + countSideBVariables == 0 ) {
+    console.log("No Soution");
+    stepListItem = "Problem finished, no solution";
+    stepListHolder = this.state.stepList;
+    stepListHolder.push(stepListItem);
+    console.log("problemListHolder: " + problemListHolder);
+    this.setState({
+      stepList: stepListHolder
+    });
   }
 
 }

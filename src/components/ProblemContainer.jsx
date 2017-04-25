@@ -10,7 +10,8 @@ class ProblemContainer extends React.Component{
     super(props);
     this.state = {
       currentProblem:[this.props.myProblem],
-      stepList: [this.props.stepList]
+      stepList: [this.props.stepList],
+      finale: false
     };
     this.handleSimplify = this.handleSimplify.bind(this);
     console.log('initial constructor');
@@ -44,7 +45,6 @@ class ProblemContainer extends React.Component{
     var countSideB;
     var countSideBVariables;
     var stepListItem = 'currently undefined: fix';
-    var finale = false;
 
     function prePushToCurrentProblem(item){
       currentProblemSideA.push(item);
@@ -264,24 +264,24 @@ class ProblemContainer extends React.Component{
   problemSplitSidesAndCount();
 
   if(countSideA == countSideB && countSideA == 1){
-    finale = false;
+    //finale = false;
     if(countSideAVariables == 1  && !currentProblemSideA.toString().match(/\d/) || countSideBVariables == 1  && !currentProblemSideB.toString().match(/\d/)){
       //problem is over
-      finale = true;
+      this.setState({finale: true});
       stepListItem = "Problem Solved";
       console.log("Problem is over");
 
     } else if (currentProblemSideA.toString().replace(/ /g, '') == currentProblemSideB.toString().replace(/ /g, '') && countSideAVariables + countSideBVariables == 0 ) {
-      finale = true;
+      this.setState({finale: true});
       console.log("infinite solutions");
       stepListItem = "Problem finished, infinite solutions";
     } else if (currentProblemSideA.toString().replace(/ /g, '') !=  currentProblemSideB.toString().replace(/ /g, '') && countSideAVariables + countSideBVariables == 0 ) {
-      finale = true;
+      this.setState({finale: true});
       console.log("No Soution");
       stepListItem = "Problem finished, no solution";
 
     }
-    if(finale){
+    if(this.state.finale == true){
       stepListHolder = this.state.stepList;
       stepListHolder.push(stepListItem);
       this.setState({
@@ -304,9 +304,9 @@ render(){
       <div className="col-xs-6">
         <ProblemList className="col-xs-6" myProblem={this.state.stepList} />
       </div>
+
       {
-        this.state.stepList[this.state.stepList.length-1] === "Problem Solved"
-        ?
+        this.state.finale == true ?
         <div className="col-xs-12 text-center" style={divStyle}>
           <h2>Problem Solved</h2>
           <h2>{this.state.currentProblem[this.state.currentProblem.length -1]}</h2>

@@ -17,7 +17,12 @@ class ProblemContainer extends React.Component{
     console.log('initial constructor');
   }
   componentWillMount(){
-    this.handleSimplify();
+    if(this.state.currentProblem[0].match(/=/) != null && this.state.currentProblem[0].match(/[A-Za-z]/) != null){
+      this.handleSimplify();
+    } else {
+      //TODO simplify for when I get an expression or it comes in with no variable
+    }
+
   }
   componentWillReceiveProps(nextProps){
     console.log('componentWillReceiveProps');
@@ -160,6 +165,7 @@ class ProblemContainer extends React.Component{
       });
     } else {
       //If it cannot simplify it will come here
+      //
       problemSplitSidesAndCount();
 
       console.log("currentProblemSideA: " + currentProblemSideA);

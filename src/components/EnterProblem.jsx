@@ -28,8 +28,39 @@ class EnterProblem extends React.Component{
     e.preventDefault();
     //removes all white space in inputed problem
     var preArray = this.state.currentInput.replace(/ /g, '').toString();
+
+
     //Input validation
-    if(!preArray.match(/[a-z][a-z]|[A-Z][A-Z]|[A-Z][a-z]|[a-z][A-Z]/g)){//if it does not contain two variables in a row continue
+    let isValid = true;
+    let validityMessage = "OK";
+
+    if(preArray.match(/[a-zA-Z][a-zA-Z]/g) != null){
+      isValid = false;
+      validityMessage = "You cant put two variables next to each other.";
+    }
+    if (preArray.match(/[\d][a-zA-Z][\d]/g) != null){
+      isValid = false;
+      validityMessage = "You can't put a number next to a variable next to another number like this: 2x2";
+    } else if(preArray.match(/[a-zA-Z][\d]+[a-zA-Z]/g) != null){
+      isValid = false;
+      validityMessage = "You can't put a variable next to a number next to another variable like this: x32x";
+    } else if(preArray.match(/[a-zA-Z][\d]/g) != null){
+      isValid = false;
+      validityMessage = "You shouldn't put the variable in front of the number";
+     } else if(preArray.match(/=/g) > 1 ){
+      isValid = false;
+      validityMessage = "You can only have one equal sign per equation";
+    } else if(preArray.charAt(0) == '='){
+      isValid = false;
+      validityMessage = "You cannot have an equal sign as the first term in an equation.";
+    } else if(preArray.charAt(preArray.length -1 ) == '='){
+      isValid = false;
+      validityMessage = "You cannot end an eqution with an equal sign";
+    } 
+    //TODO Continue data validation: I need a method for simplify or to at least check that problem is already fully simplified.
+
+
+    if(isValid){
 
       this.setState({
         currentInput: preArray,
@@ -41,7 +72,9 @@ class EnterProblem extends React.Component{
       this.setState({
         submitted: false
       })
-      alert("input invalid, try something else");
+
+      console.log(validityMessage);
+      alert("Fix your syntax, " + validityMessage);
     }
   };
 

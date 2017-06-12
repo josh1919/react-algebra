@@ -11,16 +11,18 @@ class ProblemContainer extends React.Component{
     this.state = {
       currentProblem:[this.props.myProblem],
       stepList: [this.props.stepList],
-      finale: false
+      finale: false,
+      problemType: null
     };
     this.handleSimplify = this.handleSimplify.bind(this);
+    this.handleHandler = this.handleHandler.bind(this);
     console.log('initial constructor');
   }
   componentWillMount(){
     if(this.state.currentProblem[0].match(/=/) != null && this.state.currentProblem[0].match(/[A-Za-z]/) != null){
       this.handleSimplify();
     } else {
-      //TODO simplify for when I get an expression or it comes in with no variable
+      this.handleExpression();
     }
 
   }
@@ -34,6 +36,31 @@ class ProblemContainer extends React.Component{
     }
   }
 
+//  Decide if expression or equation
+  handleHandler(){
+    if(this.state.currentProblem[this.state.currentProblem.length -1].match(/=/) !== -1){
+      this.handleSimplify();
+    } else {
+      this.handleExpression();
+    }
+  }
+  //simplifies expressions
+  handleExpression(){    
+    let currentExpression = algebra.parse(this.state.currentProblem[this.state.currentProblem.length -1]).toString().replace(/ /g, '');
+    let currentExpressionList = this.state.currentProblem;
+    currentExpressionList.push(currentExpression);
+    let currentExpressionStepList = this.state.stepList;
+    currentExpressionStepList.push("Simplify");
+    this.setState({
+      currentProblem:currentExpressionList,
+      stepList:currentExpressionStepList,
+      finale: true,
+      problemType:"Expression has been simplified"
+    })
+
+  }
+
+  //simplifies equations
   handleSimplify(){
     var temp;
     var problemListHolder;
@@ -261,7 +288,8 @@ class ProblemContainer extends React.Component{
     console.log("problemListHolder: " + problemListHolder);
     this.setState({
       currentProblem: problemListHolder,
-      stepList: stepListHolder
+      stepList: stepListHolder,
+      problemType:"Problem Solved"
     });
 
   }
@@ -304,24 +332,24 @@ render(){
   }
   return(
     <div className="col-xs-12">
-      <div className="col-xs-6">
-        <ProblemList myProblem={this.state.currentProblem} />
-      </div>
-      <div className="col-xs-6">
-        <ProblemList className="col-xs-6" myProblem={this.state.stepList} />
-      </div>
-
-      {
-        this.state.finale == true ?
-        <div className="col-xs-12 text-center" style={divStyle}>
-          <h2>Problem Solved</h2>
-          <h2>{this.state.currentProblem[this.state.currentProblem.length -1]}</h2>
-        </div>
-        :
-        <button className="btn btn-primary col-xs-12" onClick={this.handleSimplify}>Next Step</button>
-      }
+    <div className="col-xs-6">
+    <ProblemList myProblem={this.state.currentProblem} />
     </div>
-  )
+    <div className="col-xs-6">
+    <ProblemList className="col-xs-6" myProblem={this.state.stepList} />
+    </div>
+
+    {
+      this.state.finale == true ?
+      <div className="col-xs-12 text-center" style={divStyle}>
+      <h2>{this.state.problemType}</h2>
+      <h2>{this.state.currentProblem[this.state.currentProblem.length -1]}</h2>
+      </div>
+      :
+      <button className="btn btn-primary col-xs-12" onClick={this.handleHandler}>Next Step</button>
+    }
+    </div>
+    )
 }
 
 }
